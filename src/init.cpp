@@ -389,11 +389,11 @@ bool AppInit2()
         SoftSetBoolArg("-irc", true);
     }
 
-//    if (mapArgs.count("-bind")) {
-//        // when specifying an explicit binding address, you want to listen on it
-//        // even when -connect or -proxy is specified
-//        SoftSetBoolArg("-listen", true);
-//    }
+    if (mapArgs.count("-bind")) {
+        // when specifying an explicit binding address, you want to listen on it
+        // even when -connect or -proxy is specified
+        SoftSetBoolArg("-listen", true);
+    }
 
     if (mapArgs.count("-connect") && mapMultiArgs["-connect"].size() > 0) {
         // when only connecting to trusted nodes, do not seed via DNS, or listen by default
@@ -401,10 +401,10 @@ bool AppInit2()
         SoftSetBoolArg("-listen", false);
     }
 
-//    if (mapArgs.count("-proxy")) {
-//        // to protect privacy, do not listen by default if a proxy server is specified
-//        SoftSetBoolArg("-listen", false);
-//    }
+    if (mapArgs.count("-proxy")) {
+        // to protect privacy, do not listen by default if a proxy server is specified
+        SoftSetBoolArg("-listen", false);
+    }
 
     if (!GetBoolArg("-listen", true)) {
         // do not map ports or try to retrieve public IP when not listening (pointless)
@@ -596,35 +596,35 @@ bool AppInit2()
 
     CService addrProxy;
     bool fProxy = false;
-//    if (mapArgs.count("-proxy")) {
-//        addrProxy = CService(mapArgs["-proxy"], 9050);
-//        if (!addrProxy.IsValid())
-//            return InitError(strprintf(_("Invalid -proxy address: '%s'"), mapArgs["-proxy"].c_str()));
-//
-//        if (!IsLimited(NET_IPV4))
-//            SetProxy(NET_IPV4, addrProxy, nSocksVersion);
-//        if (nSocksVersion > 4) {
-//#ifdef USE_IPV6
-//            if (!IsLimited(NET_IPV6))
-//                SetProxy(NET_IPV6, addrProxy, nSocksVersion);
-//#endif
-//            SetNameProxy(addrProxy, nSocksVersion);
-//        }
-//        fProxy = true;
-//    }
+    if (mapArgs.count("-proxy")) {
+        addrProxy = CService(mapArgs["-proxy"], 9050);
+        if (!addrProxy.IsValid())
+            return InitError(strprintf(_("Invalid -proxy address: '%s'"), mapArgs["-proxy"].c_str()));
+
+        if (!IsLimited(NET_IPV4))
+            SetProxy(NET_IPV4, addrProxy, nSocksVersion);
+        if (nSocksVersion > 4) {
+#ifdef USE_IPV6
+            if (!IsLimited(NET_IPV6))
+                SetProxy(NET_IPV6, addrProxy, nSocksVersion);
+#endif
+            SetNameProxy(addrProxy, nSocksVersion);
+        }
+        fProxy = true;
+    }
 
     // -tor can override normal proxy, -notor disables tor entirely
-//    if (!(mapArgs.count("-tor") && mapArgs["-tor"] == "0") && (fProxy || mapArgs.count("-tor"))) {
-//        CService addrOnion;
-//        if (!mapArgs.count("-tor"))
-//            addrOnion = addrProxy;
-//        else
-//            addrOnion = CService(mapArgs["-tor"], 9050);
-//        if (!addrOnion.IsValid())
-//            return InitError(strprintf(_("Invalid -tor address: '%s'"), mapArgs["-tor"].c_str()));
-//        SetProxy(NET_TOR, addrOnion, 5);
-//        SetReachable(NET_TOR);
-//    }
+    if (!(mapArgs.count("-tor") && mapArgs["-tor"] == "0") && (fProxy || mapArgs.count("-tor"))) {
+        CService addrOnion;
+        if (!mapArgs.count("-tor"))
+            addrOnion = addrProxy;
+        else
+            addrOnion = CService(mapArgs["-tor"], 9050);
+        if (!addrOnion.IsValid())
+            return InitError(strprintf(_("Invalid -tor address: '%s'"), mapArgs["-tor"].c_str()));
+        SetProxy(NET_TOR, addrOnion, 5);
+        SetReachable(NET_TOR);
+    }
 
     // see Step 2: parameter interactions for more information about these
     fNoListen = !GetBoolArg("-listen", true);
@@ -645,7 +645,7 @@ bool AppInit2()
                     return InitError(strprintf(_("Cannot resolve -bind address: '%s'"), strBind.c_str()));
                 fBound |= Bind(addrBind);
             }
-       } else {
+        } else {
             struct in_addr inaddr_any;
             inaddr_any.s_addr = INADDR_ANY;
 #ifdef USE_IPV6
