@@ -1,0 +1,4 @@
+qt/locale/*.qm
+FindYouCoind
+obj/
+leveldb/*.a.*
