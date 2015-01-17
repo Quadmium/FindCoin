@@ -19,16 +19,16 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 
 win32{
-    BOOST_LIB_SUFFIX=-mgw49-mt-s-1_55
+    BOOST_LIB_SUFFIX=-mgw46-mt-s-1_55
     BOOST_INCLUDE_PATH=C:/deps/boost_1_55_0
     BOOST_LIB_PATH=C:/deps/boost_1_55_0/stage/lib
     BDB_INCLUDE_PATH=C:/deps/db-4.8.30.NC/build_unix
     BDB_LIB_PATH=C:/deps/db-4.8.30.NC/build_unix
-    OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.1i/include
-    OPENSSL_LIB_PATH=C:/deps/openssl-1.0.1i
+    OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.1j/include
+    OPENSSL_LIB_PATH=C:/deps/openssl-1.0.1j
     MINIUPNPC_INCLUDE_PATH=C:/deps
-    LIBPNG_INCLUDE_PATH=C:/deps/libpng-1.6.9
-    LIBPNG_LIB_PATH=C:/deps/libpng-1.6.9/.libs
+    LIBPNG_INCLUDE_PATH=C:/deps/libpng-1.6.12
+    LIBPNG_LIB_PATH=C:/deps/libpng-1.6.12/.libs
     MINIUPNPC_LIB_PATH=C:/deps/miniupnpc
     QRENCODE_INCLUDE_PATH=C:/deps/qrencode-3.4.3
     QRENCODE_LIB_PATH=C:/deps/qrencode-3.4.3/.libs
@@ -191,6 +191,7 @@ QMAKE_CXXFLAGS_WARN_ON = -fdiagnostics-show-option -Wall -Wextra -Wno-ignored-qu
 # Input
 DEPENDPATH += src src/json src/qt
 HEADERS += src/qt/bitcoingui.h \
+    src/qt/bitcoinguitraditional.h \
     src/qt/transactiontablemodel.h \
     src/qt/addresstablemodel.h \
     src/qt/optionsdialog.h \
@@ -296,6 +297,7 @@ HEADERS += src/qt/bitcoingui.h \
     src/txdb-leveldb.h \
     src/qt/QtWaitingSpinner.h
 SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
+    src/qt/bitcoinguitraditional.cpp \ 
     src/qt/transactiontablemodel.cpp \
     src/qt/addresstablemodel.cpp \
     src/qt/optionsdialog.cpp \

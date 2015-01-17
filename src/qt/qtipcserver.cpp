@@ -92,7 +92,9 @@ static void ipcThread(void* pArg)
 static void ipcThread2(void* pArg)
 {
     printf("ipcThread started\n");
-
+    //This thread is buggy and uses a lot of CPU, so we make it stop
+    printf("ipcThread stopped by hardcode\n");
+    return;
     message_queue* mq = (message_queue*)pArg;
     char buffer[MAX_URI_LENGTH + 1] = "";
     size_t nSize = 0;

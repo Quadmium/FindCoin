@@ -2,6 +2,7 @@
  * W.J. van der Laan 2011-2012
  */
 #include "bitcoingui.h"
+#include "bitcoinguitraditional.h"
 #include "clientmodel.h"
 #include "walletmodel.h"
 #include "optionsmodel.h"
@@ -37,6 +38,7 @@ Q_IMPORT_PLUGIN(qtaccessiblewidgets)
 
 // Need a global reference for the notifications to find the GUI
 static BitcoinGUI *guiref;
+static BitcoinGUITraditional *guireftraditional;
 static QSplashScreen *splashref;
 
 static void ThreadSafeMessageBox(const std::string& message, const std::string& caption, int style)
@@ -61,13 +63,18 @@ static void ThreadSafeMessageBox(const std::string& message, const std::string& 
 
 static bool ThreadSafeAskFee(int64_t nFeeRequired, const std::string& strCaption)
 {
-    if(!guiref)
+    if((!guireftraditional && GetBoolArg("-traditional")) || (!guiref && !GetBoolArg("-traditional")))
         return false;
     if(nFeeRequired < MIN_TX_FEE || nFeeRequired <= nTransactionFee || fDaemon)
         return true;
     bool payFee = false;
 
-    QMetaObject::invokeMethod(guiref, "askFee", GUIUtil::blockingGUIThreadConnection(),
+    if(GetBoolArg("-traditional"))
+        QMetaObject::invokeMethod(guireftraditional, "askFee", GUIUtil::blockingGUIThreadConnection(),
+                               Q_ARG(qint64, nFeeRequired),
+                               Q_ARG(bool*, &payFee));
+    else
+        QMetaObject::invokeMethod(guiref, "askFee", GUIUtil::blockingGUIThreadConnection(),
                                Q_ARG(qint64, nFeeRequired),
                                Q_ARG(bool*, &payFee));
 
@@ -76,11 +83,16 @@ static bool ThreadSafeAskFee(int64_t nFeeRequired, const std::string& strCaption
 
 static void ThreadSafeHandleURI(const std::string& strURI)
 {
-    if(!guiref)
-        return;
+    if((!guireftraditional && GetBoolArg("-traditional")) || (!guiref && !GetBoolArg("-traditional")))
+        return false;
 
-    QMetaObject::invokeMethod(guiref, "handleURI", GUIUtil::blockingGUIThreadConnection(),
-                               Q_ARG(QString, QString::fromStdString(strURI)));
+    if(GetBoolArg("-traditional"))
+        QMetaObject::invokeMethod(guireftraditional, "handleURI", GUIUtil::blockingGUIThreadConnection(),
+                                   Q_ARG(QString, QString::fromStdString(strURI)));
+
+    else
+        QMetaObject::invokeMethod(guiref, "handleURI", GUIUtil::blockingGUIThreadConnection(),
+                                   Q_ARG(QString, QString::fromStdString(strURI)));
 }
 
 static void InitMessage(const std::string &message)
@@ -222,54 +234,109 @@ int main(int argc, char *argv[])
         if (GUIUtil::GetStartOnSystemStartup())
             GUIUtil::SetStartOnSystemStartup(true);
 
-        BitcoinGUI window;
-        guiref = &window;
-        if(AppInit2())
-        {
+        //Offer the traditional wallet layout via bitcoinguitraditional.cpp
+		if(GetBoolArg("-traditional"))
+		{
+            BitcoinGUITraditional windowtraditional;
+            guireftraditional = &windowtraditional;
+            if(AppInit2())
             {
-                // Put this in a block, so that the Model objects are cleaned up before
-                // calling Shutdown().
-
-                optionsModel.Upgrade(); // Must be done after AppInit2
-
-                if (splashref)
                 {
-                    splash.finish(&window);
+                    // Put this in a block, so that the Model objects are cleaned up before
+                    // calling Shutdown().
+
+                    optionsModel.Upgrade(); // Must be done after AppInit2
+
+                    if (splashref)
+                    {
+                        splash.finish(&windowtraditional);
+                    }
+
+                    ClientModel clientModel(&optionsModel);
+                    WalletModel walletModel(pwalletMain, &optionsModel);
+
+                    windowtraditional.setClientModel(&clientModel);
+                    windowtraditional.setWalletModel(&walletModel);
+
+                    // If -min option passed, start window minimized.
+                    if(GetBoolArg("-min"))
+                    {
+                        windowtraditional.showMinimized();
+                    }
+                    else
+                    {
+                        windowtraditional.show();
+                    }
+
+                    // Place this here as guiref has to be defined if we don't want to lose URIs
+                    ipcInit(argc, argv);
+
+                    app.exec();
+
+                    windowtraditional.hide();
+                    windowtraditional.setClientModel(0);
+                    windowtraditional.setWalletModel(0);
+                    guireftraditional = 0;
                 }
-
-                ClientModel clientModel(&optionsModel);
-                WalletModel walletModel(pwalletMain, &optionsModel);
-
-                window.setClientModel(&clientModel);
-                window.setWalletModel(&walletModel);
-
-                // If -min option passed, start window minimized.
-                if(GetBoolArg("-min"))
-                {
-                    window.showMinimized();
-                }
-                else
-                {
-                    window.show();
-                }
-
-                // Place this here as guiref has to be defined if we don't want to lose URIs
-                ipcInit(argc, argv);
-
-                app.exec();
-
-                window.hide();
-                window.setClientModel(0);
-                window.setWalletModel(0);
-                guiref = 0;
+                // Shutdown the core and its threads, but don't exit Bitcoin-Qt here
+                Shutdown(NULL);
             }
-            // Shutdown the core and its threads, but don't exit Bitcoin-Qt here
-            Shutdown(NULL);
-        }
-        else
-        {
-            return 1;
-        }
+            else
+            {
+                return 1;
+            }
+		}
+		else
+		{
+            BitcoinGUI window;
+            guiref = &window;
+            if(AppInit2())
+            {
+                {
+                    // Put this in a block, so that the Model objects are cleaned up before
+                    // calling Shutdown().
+
+                    optionsModel.Upgrade(); // Must be done after AppInit2
+
+                    if (splashref)
+                    {
+                        splash.finish(&window);
+                    }
+
+                    ClientModel clientModel(&optionsModel);
+                    WalletModel walletModel(pwalletMain, &optionsModel);
+
+                    window.setClientModel(&clientModel);
+                    window.setWalletModel(&walletModel);
+
+                    // If -min option passed, start window minimized.
+                    if(GetBoolArg("-min"))
+                    {
+                        window.showMinimized();
+                    }
+                    else
+                    {
+                        window.show();
+                    }
+
+                    // Place this here as guiref has to be defined if we don't want to lose URIs
+                    ipcInit(argc, argv);
+
+                    app.exec();
+
+                    window.hide();
+                    window.setClientModel(0);
+                    window.setWalletModel(0);
+                    guiref = 0;
+                }
+                // Shutdown the core and its threads, but don't exit Bitcoin-Qt here
+                Shutdown(NULL);
+            }
+            else
+            {
+                return 1;
+            }
+		}
     } catch (std::exception& e) {
         handleRunawayException(&e);
     } catch (...) {

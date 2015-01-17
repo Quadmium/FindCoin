@@ -427,7 +427,8 @@ HelpMessageBox::HelpMessageBox(QWidget *parent) :
     uiOptions = tr("UI options") + ":\n" +
         "  -lang=<lang>           " + tr("Set language, for example \"de_DE\" (default: system locale)") + "\n" +
         "  -min                   " + tr("Start minimized") + "\n" +
-        "  -splash                " + tr("Show splash screen on startup (default: 1)") + "\n";
+        "  -splash                " + tr("Show splash screen on startup (default: 1)") + "\n" +
+        "  -traditional           " + tr("Load the traditional style layout, useful for smaller displays");
 
     setWindowTitle(tr("FindCoin-Qt"));
     setTextFormat(Qt::PlainText);

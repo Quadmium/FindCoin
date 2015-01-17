@@ -40,6 +40,7 @@
         <file>res/themes/default/button/pushbutton_hover.png</file>
         <file>res/themes/default/button/pushbutton_pressed.png</file>
         <file>res/themes/default/default.qss</file>
+		<file>res/themes/defaulttraditional/defaulttraditional.qss</file>
         <file>res/themes/default/icons/light/address-book.png</file>
         <file>res/themes/default/icons/light/connected.png</file>
         <file>res/themes/default/icons/light/copy.png</file>

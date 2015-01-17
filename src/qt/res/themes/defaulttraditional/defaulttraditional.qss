@@ -25,7 +25,6 @@ QMainWindow {
     background-color: black;
 }
 
-
 QMainWindow > QFrame, 
 QMainWindow > QDialog,  
 QMainWindow > QLabel,
@@ -888,12 +887,12 @@ QProgressBar::chunk{
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
+
 QToolBar{
     border: 0px;
-    
 }
 
-
+/*
 QToolBar:vertical{
     margin: 0 0px; 
     padding:0px;
@@ -997,7 +996,7 @@ QToolBar::handle
 {
     image:none;
 }
-
+*/
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
 QSlider::groove:horizontal {
@@ -1147,4 +1146,8 @@ QCheckBox::indicator:indeterminate:hover {
 
 QCheckBox::indicator:indeterminate:pressed {
     image: url(:/metro-ui/themes/metro-ui//items/checkbox_indeterminate_pressed.png);
+}
+
+#topToolbar {
+    background-color: silver;
 }
