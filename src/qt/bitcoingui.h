@@ -12,6 +12,7 @@ class WalletModel;
 class TransactionView;
 class OverviewPage;
 class BlockBrowser;
+class ChatWindow;
 class AddressBookPage;
 class SendCoinsDialog;
 class SignVerifyMessageDialog;
@@ -72,6 +73,7 @@ private:
     OverviewPage *overviewPage;
     BlockBrowser *blockBrowser;
     QWidget *transactionsPage;
+    ChatWindow *chatWindow;
     AddressBookPage *addressBookPage;
     AddressBookPage *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
@@ -90,6 +92,7 @@ private:
     QAction *historyAction;
     QAction *quitAction;
     QAction *sendCoinsAction;
+    QAction *chatAction;
     QAction *addressBookAction;
     QAction *signMessageAction;
     QAction *verifyMessageAction;
@@ -163,6 +166,8 @@ private slots:
     void gotoHistoryPage();
     /** Switch to address book page */
     void gotoAddressBookPage();
+    /** Switch to chat page */
+    void gotoChatPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */

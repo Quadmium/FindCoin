@@ -13,6 +13,7 @@ class AddressBookPage;
 class SendCoinsDialog;
 class SignVerifyMessageDialog;
 class BlockBrowser;
+class ChatWindow;
 class Notificator;
 class RPCConsole;
 
@@ -67,6 +68,7 @@ private:
     SendCoinsDialog *sendCoinsPage;
     SignVerifyMessageDialog *signVerifyMessageDialog;
 	BlockBrowser *blockPage;
+    ChatWindow *chatWindow;
 
     QLabel *labelEncryptionIcon;
 	QLabel *labelStakingIcon;
@@ -79,6 +81,7 @@ private:
     QAction *overviewAction;
     QAction *historyAction;
     QAction *quitAction;
+    QAction *chatAction;
     QAction *sendCoinsAction;
     QAction *addressBookAction;
     QAction *messageAction;
@@ -137,7 +140,8 @@ public slots:
     void gotoMessagePage();
 	void gotoBlockPage();
     void gotoMessagePage(QString);
-	void applyTheme(QString name="default");
+    /** Switch to chat page */
+	void gotoChatPage();
 private slots:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
@@ -178,6 +182,8 @@ private slots:
     void toggleHidden();
 	
 	void updateStakingIcon();
+    
+    void applyTheme(QString name="default");
 };
 
 #endif

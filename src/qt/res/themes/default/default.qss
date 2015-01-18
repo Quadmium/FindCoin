@@ -948,6 +948,15 @@ QToolBar:vertical QPushButton#historyAction:checked
     background: url(":/default/res/themes/default/icon-txt/active/transactions.png") no-repeat left 0 transparent; 
 }
 
+QToolBar:vertical QPushButton#chatAction
+{
+    background: url(":/default/res/themes/default/icon-txt/normal/chat.png") no-repeat left 0 transparent; 
+}
+QToolBar:vertical QPushButton#chatAction:checked
+{
+    background: url(":/default/res/themes/default/icon-txt/active/chat.png") no-repeat left 0 transparent; 
+}
+
 QToolBar:vertical QPushButton#addressBookAction
 {
     background: url(":/default/res/themes/default/icon-txt/normal/address.png") no-repeat left 0 transparent; 

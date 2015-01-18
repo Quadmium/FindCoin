@@ -8,6 +8,7 @@
 #include "transactiontablemodel.h"
 #include "addressbookpage.h"
 #include "sendcoinsdialog.h"
+#include "chatwindow.h"
 #include "signverifymessagedialog.h"
 #include "optionsdialog.h"
 #include "aboutdialog.h"
@@ -120,6 +121,8 @@ BitcoinGUITraditional::BitcoinGUITraditional(QWidget *parent):
     signVerifyMessageDialog = new SignVerifyMessageDialog(this);
 
 	blockPage = new BlockBrowser(this);
+    
+    chatWindow = new ChatWindow(this);
 	
     centralWidget = new QStackedWidget(this);
     centralWidget->addWidget(overviewPage);
@@ -128,6 +131,7 @@ BitcoinGUITraditional::BitcoinGUITraditional(QWidget *parent):
     centralWidget->addWidget(receiveCoinsPage);
     centralWidget->addWidget(sendCoinsPage);
 	centralWidget->addWidget(blockPage);
+    centralWidget->addWidget(chatWindow);
     setCentralWidget(centralWidget);
 
     // Create status bar
@@ -243,6 +247,12 @@ void BitcoinGUITraditional::createActions()
     blockAction->setCheckable(true);
     blockAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
     tabGroup->addAction(blockAction);
+    
+    chatAction = new QAction(QIcon(":/icons/chat"), tr("&IRC"), this);
+    chatAction->setToolTip(tr("Chat on #FindCoin"));
+    chatAction->setCheckable(true);
+    chatAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_7));
+    tabGroup->addAction(chatAction);
 	
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
@@ -257,12 +267,13 @@ void BitcoinGUITraditional::createActions()
     connect(messageAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(messageAction, SIGNAL(triggered()), this, SLOT(gotoMessagePage()));
 	connect(blockAction, SIGNAL(triggered()), this, SLOT(gotoBlockPage()));
+    connect(chatAction, SIGNAL(triggered()), this, SLOT(gotoChatPage()));
 
     quitAction = new QAction(QIcon(":/default/res/themes/default/icons/light/sign-out.png"), tr("&Exit"), this);
     quitAction->setToolTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
-    aboutAction = new QAction(QIcon(":/icons/Findcoin.png"), tr("&About FindCoin-Qt"), this);
+    aboutAction = new QAction(QIcon(":/icons/bitcoin"), tr("&About FindCoin-Qt"), this);
     aboutAction->setToolTip(tr("Show information about FindCoin"));
     aboutAction->setMenuRole(QAction::AboutRole);
     aboutQtAction = new QAction(QIcon(":/qt-project.org/qmessagebox/images/qtlogo-64.png"), tr("About &Qt"), this);
@@ -271,7 +282,7 @@ void BitcoinGUITraditional::createActions()
     optionsAction = new QAction(QIcon(":/default/res/themes/default/icons/light/wrench.png"), tr("&Options..."), this);
     optionsAction->setToolTip(tr("Modify configuration options for findcoin"));
     optionsAction->setMenuRole(QAction::PreferencesRole);
-    toggleHideAction = new QAction(QIcon(":/icons/Findcoin"), tr("Show/Hide &FindCoin"), this);
+    toggleHideAction = new QAction(QIcon(":/icons/bitcoin"), tr("Show/Hide &FindCoin"), this);
     toggleHideAction->setToolTip(tr("Show or hide the FindCoin window"));
     exportAction = new QAction(QIcon(":/default/res/themes/default/icons/light/save.png"), tr("&Export..."), this);
     exportAction->setToolTip(tr("Export the data in the current tab to a file"));
@@ -342,6 +353,7 @@ void BitcoinGUITraditional::createToolBars()
 #ifdef FIRST_CLASS_MESSAGING
     toolbar->addAction(messageAction);
 #endif
+    toolbar->addAction(chatAction);
     toolbar->addAction(exportAction);
 
     //*toolbar2 = addToolBar(tr("Actions toolbar"));
@@ -716,6 +728,15 @@ void BitcoinGUITraditional::gotoOverviewPage()
 {
     overviewAction->setChecked(true);
     centralWidget->setCurrentWidget(overviewPage);
+
+    exportAction->setEnabled(false);
+    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+}
+
+void BitcoinGUITraditional::gotoChatPage()
+{
+    chatAction->setChecked(true);
+    centralWidget->setCurrentWidget(chatWindow);
 
     exportAction->setEnabled(false);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);

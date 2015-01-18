@@ -6,6 +6,7 @@
  */
 #include "bitcoingui.h"
 #include "transactiontablemodel.h"
+#include "chatwindow.h"
 #include "addressbookpage.h"
 #include "sendcoinsdialog.h"
 #include "signverifymessagedialog.h"
@@ -128,6 +129,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
 
     addressBookPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::SendingTab);
 
+    chatWindow = new ChatWindow(this);
+    
     receiveCoinsPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::ReceivingTab);
 
     sendCoinsPage = new SendCoinsDialog(this);
@@ -157,6 +160,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     stackedWidget->addWidget(overviewPage);
     stackedWidget->addWidget(blockBrowser);
     stackedWidget->addWidget(transactionsPage);
+    stackedWidget->addWidget(chatWindow);
     stackedWidget->addWidget(addressBookPage);
     stackedWidget->addWidget(receiveCoinsPage);
     stackedWidget->addWidget(sendCoinsPage);
@@ -293,20 +297,26 @@ void BitcoinGUI::createActions()
     historyAction->setProperty("objectName","historyAction");
     tabGroup->addAction(historyAction);
 
+    chatAction = new QAction(tr("&IRC"), this);
+    chatAction->setToolTip(tr("Chat on #FindCoin"));
+    chatAction->setCheckable(true);
+    chatAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
+    chatAction->setProperty("objectName","chatAction");
+    tabGroup->addAction(chatAction);
+    
     addressBookAction = new QAction(tr("&Address Book"), this);
     addressBookAction->setToolTip(tr("Edit the list of stored addresses and labels"));
     addressBookAction->setCheckable(true);
-    addressBookAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
+    addressBookAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
     addressBookAction->setProperty("objectName","addressBookAction");
     tabGroup->addAction(addressBookAction);
 
     blockAction = new QAction(tr("&Block Explorer"), this);
     blockAction->setToolTip(tr("Explore the BlockChain"));
-    blockAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
+    blockAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_7));
     blockAction->setCheckable(true);
     blockAction->setProperty("objectName","blockAction");
     tabGroup->addAction(blockAction);
-
 
     connect(blockAction, SIGNAL(triggered()), this, SLOT(gotoBlockBrowser()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -319,6 +329,8 @@ void BitcoinGUI::createActions()
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(gotoAddressBookPage()));
+    connect(chatAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(chatAction, SIGNAL(triggered()), this, SLOT(gotoChatPage()));
 
     quitAction = new QAction(QIcon(":/default/res/themes/default/icons/light/sign-out.png"), tr("&Exit"), this);
     quitAction->setToolTip(tr("Quit application"));
@@ -422,6 +434,7 @@ void BitcoinGUI::createToolBars()
     _addButtonInToolbar(sendCoinsAction,toolbar);
     _addButtonInToolbar(receiveCoinsAction,toolbar);
     _addButtonInToolbar(historyAction,toolbar);
+    _addButtonInToolbar(chatAction,toolbar);
     _addButtonInToolbar(addressBookAction,toolbar);
     _addButtonInToolbar(blockAction,toolbar);
     _addButtonInToolbar(exportAction,toolbar);
@@ -823,6 +836,15 @@ void BitcoinGUI::gotoAddressBookPage()
     exportAction->setEnabled(true);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
     connect(exportAction, SIGNAL(triggered()), addressBookPage, SLOT(exportClicked()));
+}
+
+void BitcoinGUI::gotoChatPage()
+{
+    chatAction->setChecked(true);
+    stackedWidget->setCurrentWidget(chatWindow);
+
+    exportAction->setEnabled(false);
+    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
 }
 
 void BitcoinGUI::gotoReceiveCoinsPage()

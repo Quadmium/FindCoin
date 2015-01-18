@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/icons">
         <file alias="bitcoin">res/icons/Findcoin.png</file>
+        <file alias="chat">res/icons/chat.png</file>
         <file alias="coinbg">res/icons/Findcoin256.png</file>
         <file alias="address-book">res/icons/address-book.png</file>
         <file alias="quit">res/icons/quit.png</file>

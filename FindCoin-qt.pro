@@ -267,11 +267,12 @@ HEADERS += src/qt/bitcoingui.h \
     src/allocators.h \
     src/ui_interface.h \
     src/qt/rpcconsole.h \
-  src/qt/blockbrowser.h \
+    src/qt/blockbrowser.h \
     src/version.h \
     src/netbase.h \
     src/clientversion.h \
-  src/qt/serveur.h \
+    src/qt/serveur.h \
+    src/qt/chatwindow.h \
     src/bloom.h \
     src/qt/ActionButton.h \
     src/qt/header.h \
@@ -309,8 +310,9 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/aboutdialog.cpp \
     src/qt/editaddressdialog.cpp \
     src/qt/bitcoinaddressvalidator.cpp \
-  src/qt/blockbrowser.cpp \
-  src/qt/serveur.cpp \
+    src/qt/blockbrowser.cpp \
+    src/qt/serveur.cpp \
+    src/qt/chatwindow.cpp \
     src/alert.cpp \
     src/version.cpp \
     src/sync.cpp \
@@ -380,6 +382,7 @@ FORMS += \
     src/qt/forms/addressbookpage.ui \
     src/qt/forms/signverifymessagedialog.ui \
     src/qt/forms/aboutdialog.ui \
+    src/qt/forms/chatwindow.ui \
     src/qt/forms/editaddressdialog.ui \
     src/qt/forms/transactiondescdialog.ui \
     src/qt/forms/overviewpage.ui \

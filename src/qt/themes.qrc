@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/default">
         <file>res/themes/default/icon-txt/normal/address.png</file>
+        <file>res/themes/default/icon-txt/normal/chat.png</file>
         <file>res/themes/default/icon-txt/normal/block.png</file>
         <file>res/themes/default/icon-txt/normal/cloud-mining.png</file>
         <file>res/themes/default/icon-txt/normal/export.png</file>
@@ -9,6 +10,7 @@
         <file>res/themes/default/icon-txt/normal/send-coin.png</file>
         <file>res/themes/default/icon-txt/normal/transactions.png</file>
         <file>res/themes/default/icon-txt/active/address.png</file>
+        <file>res/themes/default/icon-txt/active/chat.png</file>
         <file>res/themes/default/icon-txt/active/block.png</file>
         <file>res/themes/default/icon-txt/active/cloud-mining.png</file>
         <file>res/themes/default/icon-txt/active/export.png</file>
