@@ -44,7 +44,6 @@ class Serveur : public QTcpSocket
 
 		QWidget *parent;
 
-
 	signals:
 		void pseudoChanged(QString newPseudo);
 		void joinTab();
