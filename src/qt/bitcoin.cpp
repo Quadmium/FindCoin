@@ -84,7 +84,7 @@ static bool ThreadSafeAskFee(int64_t nFeeRequired, const std::string& strCaption
 static void ThreadSafeHandleURI(const std::string& strURI)
 {
     if((!guireftraditional && GetBoolArg("-traditional")) || (!guiref && !GetBoolArg("-traditional")))
-        return false;
+        return;
 
     if(GetBoolArg("-traditional"))
         QMetaObject::invokeMethod(guireftraditional, "handleURI", GUIUtil::blockingGUIThreadConnection(),
